@@ -3,97 +3,93 @@
 #include <string.h>
 #include "binary_trees.h"
 
-/* Original code from http://stackoverflow.com/a/13755911/5184480 */
-
 /**
- * print_t - Stores recursively each level in an array of strings
+ * print_t - is function Stores recursively
+ * @tree: is the Pointer 
+ * @r_offset: r_ is Offset to print
+ * @r_depth: is the r_Depth of the node
+ * @r_s: Buffer
  *
- * @tree: Pointer to the node to print
- * @offset: Offset to print
- * @depth: Depth of the node
- * @s: Buffer
- *
- * Return: length of printed tree after process
+ * Return: is the length of printed tree
  */
-static int print_t(const binary_tree_t *tree, int offset, int depth, char **s)
+static int r_print_t(const binary_tree_t *tree, int r_offset, int r_depth, char **r_s)
 {
 	char b[6];
-	int width, left, right, is_left, i;
+	int r_width, left;
+	int right, r_is_left, r_i;
 
 	if (!tree)
 		return (0);
-	is_left = (tree->parent && tree->parent->left == tree);
-	width = sprintf(b, "(%03d)", tree->n);
-	left = print_t(tree->left, offset, depth + 1, s);
-	right = print_t(tree->right, offset + left + width, depth + 1, s);
-	for (i = 0; i < width; i++)
-		s[depth][offset + left + i] = b[i];
-	if (depth && is_left)
+	r_is_left = (tree->parent && tree->parent->left == tree);
+	r_width = sprintf(b, "(%03d)", tree->n);
+	left = r_print_t(tree->left, r_offset, r_depth + 1, r_s);
+	right = r_print_t(tree->right, r_offset + left + r_width, r_depth + 1, r_s);
+	for (r_i = 0; r_i < r_width; r_i++)
+		r_s[r_depth][r_offset + left + r_i] = b[r_i];
+	if (r_depth && r_is_left)
 	{
-		for (i = 0; i < width + right; i++)
-			s[depth - 1][offset + left + width / 2 + i] = '-';
-		s[depth - 1][offset + left + width / 2] = '.';
+		for (r_i = 0; r_i < r_width + right; r_i++)
+			r_s[r_depth - 1][r_offset + left + r_width / 2 + r_i] = '-';
+		r_s[r_depth - 1][r_offset + left + r_width / 2] = '.';
 	}
-	else if (depth && !is_left)
+	else if (r_depth && !r_is_left)
 	{
-		for (i = 0; i < left + width; i++)
-			s[depth - 1][offset - width / 2 + i] = '-';
-		s[depth - 1][offset + left + width / 2] = '.';
+		for (r_i = 0; r_i < left + r_width; r_i++)
+			r_s[r_depth - 1][r_offset - r_width / 2 + r_i] = '-';
+		r_s[r_depth - 1][r_offset + left + r_width / 2] = '.';
 	}
-	return (left + width + right);
+	return (left + r_width + right);
 }
 
 /**
- * _height - Measures the height of a binary tree
+ * r_height - is the measures the height
+ * @tree: is the Pointer to the node to measures the height
  *
- * @tree: Pointer to the node to measures the height
- *
- * Return: The height of the tree starting at @node
+ * Return: is the he height of the tree starting at @node
  */
-static size_t _height(const binary_tree_t *tree)
+static size_t _r_height(const binary_tree_t *tree)
 {
 	size_t height_l;
 	size_t height_r;
 
-	height_l = tree->left ? 1 + _height(tree->left) : 0;
-	height_r = tree->right ? 1 + _height(tree->right) : 0;
+	height_l = tree->left ? 1 + _r_height(tree->left) : 0;
+	height_r = tree->right ? 1 + _r_height(tree->right) : 0;
 	return (height_l > height_r ? height_l : height_r);
 }
 
 /**
- * binary_tree_print - Prints a binary tree
- *
+ * r_binary_tree_print - is the Prints a binary tree
  * @tree: Pointer to the root node of the tree to print
  */
 void binary_tree_print(const binary_tree_t *tree)
 {
-	char **s;
-	size_t height, i, j;
+	char **r_s;
+	size_t r_height, r_i, r_j;
 
 	if (!tree)
 		return;
-	height = _height(tree);
-	s = malloc(sizeof(*s) * (height + 1));
-	if (!s)
+	r_height = _r_height(tree);
+	r_s = malloc(sizeof(*r_s) * (r_height + 1));
+	if (!r_s)
 		return;
-	for (i = 0; i < height + 1; i++)
+	for (r_i = 0; r_i < r_height + 1; r_i++)
 	{
-		s[i] = malloc(sizeof(**s) * 255);
-		if (!s[i])
+		r_s[r_i] = malloc(sizeof(**r_s) * 255);
+		if (!r_s[r_i])
 			return;
-		memset(s[i], 32, 255);
+		memset(r_s[r_i], 32, 255);
 	}
-	print_t(tree, 0, 0, s);
-	for (i = 0; i < height + 1; i++)
+	r_print_t(tree, 0, 0, r_s);
+	for (r_i = 0; r_i < r_height + 1; r_i++)
 	{
-		for (j = 254; j > 1; --j)
+		for (r_j = 254; r_j > 1; --r_j)
 		{
-			if (s[i][j] != ' ')
+			if (r_s[r_i][r_j] != ' ')
 				break;
-			s[i][j] = '\0';
+			r_s[r_i][r_j] = '\0';
 		}
-		printf("%s\n", s[i]);
-		free(s[i]);
+		printf("%s\n", r_s[r_i]);
+		free(r_s[r_i]);
 	}
-	free(s);
+	free(r_s);
 }

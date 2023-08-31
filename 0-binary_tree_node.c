@@ -4,7 +4,7 @@
 /**
  * binary_tree_node - function that create a binary tree node
  *
- * @parent: root node 
+ * @parent: root node
  * @value: is the value root note
  *
  * Return: binary tree
